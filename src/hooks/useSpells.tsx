@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { getAllSpells } from "../api/spells";
+import { Spell } from "../types/spell";
 
 const useSpells = () => {
-  const [loading, setLoading] = useState(true);
-  const [spells, setSpells] = useState([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [spells, setSpells] = useState<Spell[]>([]);
 
   useEffect(() => {
     const fetchSpells = async () => {
