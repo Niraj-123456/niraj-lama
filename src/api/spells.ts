@@ -1,5 +1,5 @@
 import axios from "axios";
-import { config } from "../utils/config";
+import { config } from "../lib/config";
 
 export async function getAllSpells() {
   return axios.get(`${config.baseUrl}/spells`);
