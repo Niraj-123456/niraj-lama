@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { getAllSpells } from "../api/spells";
 import { Spell } from "../types/spell";
 
-const useSpells = () => {
+const useSpells = (query: string) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [spells, setSpells] = useState<Spell[]>([]);
 
@@ -10,7 +10,7 @@ const useSpells = () => {
     const fetchSpells = async () => {
       setLoading(true);
       try {
-        const res = await getAllSpells();
+        const res = await getAllSpells(query);
         if (res.status === 200) {
           setSpells(res.data?.results);
         }
@@ -21,7 +21,7 @@ const useSpells = () => {
       }
     };
     fetchSpells();
-  }, []);
+  }, [query]);
 
   return { loading, spells };
 };

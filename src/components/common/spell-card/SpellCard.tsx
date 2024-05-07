@@ -1,40 +1,31 @@
-import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { bgLevelColor } from "@/lib/bgColor";
+import { Spell } from "@/types/spell";
 
 type SpellCard = {
-  index: string;
-  name: string;
-  level: number;
-  url: string;
+  spell: Spell;
+  onUpdateFavSpells: (obj: Spell) => void;
+  favSpells?: Record<string, Spell>;
 };
 
-const SpellCard: React.FC<{ spell: SpellCard }> = ({ spell }) => {
+const SpellCard = ({ spell, onUpdateFavSpells, favSpells }: SpellCard) => {
   const { name, level, url } = spell;
 
-  const savedFavSpells = JSON.parse(
-    localStorage.getItem("favorite-spells") || "{}"
-  );
-
-  const handleUpdateFavoriteSpells = (spell: SpellCard) => {
+  const handleUpdateFavoriteSpells = (spell: Spell) => {
     const savedFavSpells = JSON.parse(
       localStorage.getItem("favorite-spells") || "{}"
     );
-    const heartIcon = document.getElementById(`heart-icon-${spell.index}`);
-    if (heartIcon)
-      if (savedFavSpells[spell.index]) {
-        delete savedFavSpells[spell.index];
-        heartIcon.style.fill = "white";
-        heartIcon.style.strokeWidth = "2px";
-      } else {
-        savedFavSpells[spell.index] = spell;
-        heartIcon.style.fill = "red";
-        heartIcon.style.strokeWidth = "0px";
-      }
+    if (savedFavSpells[spell.index]) {
+      delete savedFavSpells[spell.index];
+      onUpdateFavSpells(savedFavSpells);
+    } else {
+      savedFavSpells[spell.index] = spell;
+      onUpdateFavSpells(savedFavSpells);
+    }
     localStorage.setItem("favorite-spells", JSON.stringify(savedFavSpells));
   };
 
@@ -69,12 +60,12 @@ const SpellCard: React.FC<{ spell: SpellCard }> = ({ spell }) => {
         <div className="pt-1">
           <Heart
             fill={
-              savedFavSpells[spell.index]?.index === spell.index
+              favSpells && favSpells[spell.index]?.index === spell.index
                 ? "red"
                 : "white"
             }
             strokeWidth={
-              savedFavSpells[spell.index]?.index === spell.index ? 0 : 2
+              favSpells && favSpells[spell.index]?.index === spell.index ? 0 : 2
             }
             id={`heart-icon-${spell.index}`}
             className="transition-all duration-300 cursor-pointer hover:text-gray-500"
